@@ -9,6 +9,7 @@ A premium, mobile-first ecommerce storefront for selling digital access to curat
 - Tailwind CSS
 - Lucide icons
 - Stripe Checkout architecture
+- Vercel-ready deployment
 
 ## Run locally
 
@@ -18,6 +19,24 @@ npm run dev
 ```
 
 Copy `.env.example` to `.env.local` and add Stripe test credentials before testing checkout.
+
+## Deploy to Vercel
+
+1. Sign in to Vercel with GitHub.
+2. Choose **Add New → Project**.
+3. Import `MinerBlox/vintedreselling`.
+4. Vercel should automatically detect **Next.js**. Keep the default build settings.
+5. Deploy once without Stripe if you only want to preview the storefront.
+6. For checkout, add these under **Project Settings → Environment Variables**:
+   - `STRIPE_SECRET_KEY`
+   - `STRIPE_WEBHOOK_SECRET`
+   - `NEXT_PUBLIC_SITE_URL` — your production Vercel URL or custom domain, e.g. `https://your-project.vercel.app`
+7. Redeploy after adding/changing environment variables.
+8. In Stripe, create a webhook endpoint pointing to:
+   `https://YOUR-DOMAIN/api/webhooks/stripe`
+9. Subscribe that endpoint to `checkout.session.completed`, then copy its `whsec_...` signing secret into `STRIPE_WEBHOOK_SECRET` in Vercel.
+
+A `vercel.json` file is included so the repository is explicitly identified as a Next.js project. No static export is used because checkout/webhook routes require a server runtime.
 
 ## Routes
 
